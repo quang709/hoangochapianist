@@ -1,4 +1,7 @@
 import './bootstrap';
-import { Autoplay, Navigation, Pagination } from "swiper";
-import Swiper from "swiper";
-Swiper.use([Autoplay, Navigation, Pagination]);
+
+import Alpine from 'alpinejs';
+
+window.Alpine = Alpine;
+
+Alpine.start();
