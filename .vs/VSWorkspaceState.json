@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\bootstrap"
   ],
-  "SelectedNode": "\\vite.config.js",
+  "SelectedNode": "\\webpack.mix.js",
   "PreviewInSolutionExplorer": false
 }

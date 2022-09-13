@@ -77,6 +77,28 @@
             <input type="text" name="name" class="form-control" placeholder="Enter name">
             <span class="error-form text-danger alert-message"></span>
           </div>
+          <div class="form-group" >
+            <label for="email">Parent:</label>
+            <select  name="category_id">
+            <option value="0">--Root--</option>  
+              @foreach($category as $c)
+              <option value="{{$c->id}}">
+              @php
+              $str ='';
+              for($i = 0; $i < $c->level; $i++)
+              {
+                echo $str;
+                $str.='-- ';
+              }
+              @endphp     
+            
+              {{$c->name}}
+            </option>
+            @endforeach
+            
+            </select>
+          </div>
+        
           <button type="submit" class="btn btn-primary js-btn-create">Submit</button>
         </form>
       </div>
@@ -104,6 +126,27 @@
             <label for="email">Name:</label>
             <input type="text" id="name" name="name" class="form-control" placeholder="Enter name">
             <span class="error-form text-danger alert-message"></span>
+          </div>
+          <div class="form-group" >
+            <label for="email">Parent:</label>
+            <select  name="category_id">
+            <option value="0">--Root--</option>  
+              @foreach($category as $c)
+              <option value="{{$c->id}}">
+              @php
+              $str ='';
+              for($i = 0; $i < $c->level; $i++)
+              {
+                echo $str;
+                $str.='-- ';
+              }
+              @endphp     
+            
+              {{$c->name}}
+            </option>
+            @endforeach
+            
+            </select>
           </div>
           <button type="submit" class="btn btn-primary js-btn-update">Submit</button>
         </form>
@@ -194,6 +237,7 @@
         $('#name').val(response.category.name);
         $('#id').val(response.category.id);
         $("#modalEdit").modal('show');
+        $('select').val(response.category.parent_id);
       }
 
     })
