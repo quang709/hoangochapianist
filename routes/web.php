@@ -32,7 +32,9 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth'], function () {
         Route::get('edit/{id}', [App\Http\Controllers\CategoryController::class, 'edit'])->name('categories.edit');
         Route::post('update/{id}', [App\Http\Controllers\CategoryController::class, 'update'])->name('categories.update');
         Route::get('delete/{id}', [App\Http\Controllers\CategoryController::class, 'destroy'])->name('categories.destroy');
+        Route::get('{id}', [App\Http\Controllers\CategoryController::class, 'newsofcategory'])->name('categories.newsofcategory');
     });
+
 
     Route::group(['prefix' => 'news'], function () {
         Route::get('', [App\Http\Controllers\NewsController::class, 'index'])->name('news.index');

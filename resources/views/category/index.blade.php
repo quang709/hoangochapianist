@@ -35,7 +35,7 @@
           <tbody>
             @foreach($category as $c)
             <tr>
-              <td name="name">{{$c->name}}</td>
+              <td name="name"><a href="{{route('categories.newsofcategory',['id'=>$c->id])}}">{{$c->name}}</a></td>
               <td name="name_url ">{{$c->name_url}}</td>
               <td>
                 <a class="btn btn-warning js-modal-edit" data-route="{{route('categories.edit',['id'=>$c->id])}}" > <i class="fas fa-edit"></i></a>
