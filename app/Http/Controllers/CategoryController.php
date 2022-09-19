@@ -117,4 +117,10 @@ class CategoryController extends Controller
         $category->delete();
         return response()->json(['success' => 'delete successfully.']);
     }
+    public function newsofcategory($id)
+    {
+        $category = $this->category->getCategoriesNews();
+         $newsOfCategory = $this->category->newsOfCategory($id);
+        return view('category.newsofcategory', compact('newsOfCategory', 'category'));
+    }
 }
