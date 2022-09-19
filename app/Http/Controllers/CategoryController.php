@@ -12,6 +12,12 @@ use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
+    public $category;
+
+    public function __construct()
+    {
+        $this->category = new Category;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +25,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $category = Category::latest()->get();
+        $category =   $this->category->getCategoriesNews();
         return view('category.index', compact('category'));
     }
 
@@ -44,10 +50,9 @@ class CategoryController extends Controller
         $category = new Category;
         $category->name = $request->name;
         $category->name_url = Str::slug($request->name, '-');
+        $category->parent_id = $request->category_id;
         $category->save();
-        return response()->json(['success'=>'create successfully.']);
-
-
+        return response()->json(['success' => 'create successfully.']);
     }
 
     /**
@@ -70,7 +75,7 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category = Category::find($id);
-        return response()->json(['category'=>$category]);
+        return response()->json(['category' => $category]);
     }
 
     /**
@@ -84,10 +89,20 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         $category->name = $request->name;
-        $category->name_url= Str::slug($request->name, '-');
-        $category->save();
-        return response()->json(['success'=>'update successfully.']);
+        $category->name_url = Str::slug($request->name, '-');
+        $date = Category::find($request->category_id);
+        if ($request->category_id == 0) {
+            $category->parent_id = $request->category_id;
+        } else {
+            if ($request->category_id == $category->id or $category->created_at <  $date->created_at) {
+                unset($request->category_id);
+            } else {
+                $category->parent_id = $request->category_id;
+            }
+        }
 
+        $category->save();
+        return response()->json(['success' => 'update successfully.']);
     }
 
     /**
@@ -100,6 +115,6 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         $category->delete();
-        return response()->json(['success'=>'delete successfully.']);
+        return response()->json(['success' => 'delete successfully.']);
     }
 }
