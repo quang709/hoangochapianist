@@ -48,33 +48,6 @@ class Category extends Model
         }
     }
 
-    
-    
-
-
-    public function getCategoriesNews()
-    {
-        $categories = Category::orderBy('id', 'desc')->get();
-        $listCategory = [];
-        Category::recursive($categories, $parents = 0, $level = 1, $listCategory);
-        return $listCategory;
-    }
-    public static function recursive($categories, $parents = 0, $level = 1, &$listCategory)
-    {
-
-        if (count($categories) > 0) {
-            foreach ($categories as $key => $value) {
-                if ($value->parent_id == $parents) {
-                    $value->level = $level;
-                    $listCategory[] = $value;
-                    unset($categories[$key]);
-                    $parent = $value->id;
-                    self::recursive($categories, $parent, $level + 1, $listCategory);
-                }
-            }
-        }
-    }
-
     public function newsOfCategory($id)
     {
 

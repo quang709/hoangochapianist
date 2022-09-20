@@ -16,11 +16,17 @@ class NewsController extends Controller
     use HandleImage;
 
     public $news;
+    public $category;
 
     public function __construct()
     {
         $this->news = new News;
+        $this->category = new Category;
     }
+
+
+
+
 
     /**
      * Display a listing of the resource.
@@ -29,7 +35,8 @@ class NewsController extends Controller
      */
     public function index()
     {
-        $category = Category::all();
+
+        $category = $this->category->getCategoriesNews();
         $news = News::latest()->get();
         return view('news.index', compact('news', 'category'));
     }
@@ -52,7 +59,6 @@ class NewsController extends Controller
      */
     public function store(StoreNewsRequest $request)
     {
-     
         $news = new News;
         $news->title = $request->title;
         $news->summary = $request->summary;
@@ -88,7 +94,8 @@ class NewsController extends Controller
     public function edit($id)
     {
         $news = News::with('category')->where('id', $id)->get();
-        return response()->json(['news' => $news]);
+        $category = Category::all();
+        return response()->json(['news' => $news, 'category' => $category]);
     }
 
     /**
@@ -99,7 +106,7 @@ class NewsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateNewsRequest $request, $id)
-    {       
+    {
         $news = News::find($id);
         $news->title = $request->title;
         $news->summary = $request->summary;
