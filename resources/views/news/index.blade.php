@@ -46,8 +46,12 @@
               <td name="title">{{$n->title}}</td>
               <td name="title_url">{{$n->title_url}}</td>
               <td name="content">{!!$n->summary!!}</td>
-              <td name="image"><img src="upload/news/{{$n->image}}" ></td>
-              <td name="content">{{$n->category[0]->name??''}}</td>
+              <td name="image"><img src="upload/news/{{$n->image}}"></td>
+              <td name="content">
+               @foreach($n->category as $cat)
+                {{$cat->name??''}}
+                @endforeach
+              </td>
               <td>
                 <a class="btn btn-warning js-modal-edit" data-route="{{route('news.edit',['id'=>$n->id])}}"><i class="fas fa-edit"></i></a>
                 <a class="btn btn-danger js-modal-delete" data-route-delete="{{route('news.destroy',['id'=>$n->id])}}" data-toggle="modal" data-target="#modalDelete"><i class="fas fa-trash"></i></a>
@@ -75,14 +79,23 @@
 
 
       <div class="modal-body">
-
         <form action="" method="POST" data-route="{{route('news.store')}}" id="form-create" enctype="multipart/form-data">
           @csrf
           <label for="email">Category:</label>
-          <div class="form-group" style="text-align: left">      
-            <select  name="category_id">
+          <div class="form-group">
+            <select name="category_id[]" multiple>
               @foreach($category as $c)
-              <option value="{{$c->id}}">{{$c->name}}</option>            
+              <option value="{{$c->id}}">
+                @php
+                $str ='';
+                for($i = 0; $i < $c->level; $i++)
+                  {
+                  echo $str;
+                  $str.='-- ';
+                  }
+                  @endphp
+                  {{$c->name}}
+              </option>
               @endforeach
             </select>
           </div>
@@ -127,10 +140,20 @@
         <form action="" method="POST" id="form-edit" enctype="multipart/form-data">
           @csrf
           <label for="email">Category:</label>
-          <div class="form-group" style="text-align: left">      
-            <select  name="category_id">
+          <div class="form-group">
+            <select id="cats" name="category_id[]" multiple>
               @foreach($category as $c)
-              <option value="{{$c->id}}">{{$c->name}}</option>            
+              <option value="{{$c->id}}">
+                @php
+                $str ='';
+                for($i = 0; $i < $c->level; $i++)
+                  {
+                  echo $str;
+                  $str.='-- ';
+                  }
+                  @endphp
+                  {{$c->name}}
+              </option>
               @endforeach
             </select>
           </div>
@@ -155,7 +178,7 @@
             <input type="file" id="imgInp" name="image" class="form-control">
             <span class="error-form text-danger alert-message"></span>
           </div>
-          <img  id="image1">
+          <img id="image1">
           <button type="submit" class="btn btn-primary js-btn-update">Submit</button>
         </form>
       </div>
@@ -204,11 +227,12 @@
   });
   $('.js-btn-create').click(function(e) {
     e.preventDefault();
+
     let url = $("#form-create").data('route');
     var data = new FormData(document.getElementById("form-create"));
     data.append('content', CKEDITOR.instances['content1'].getData());
-  
-     
+    data.getAll('category_id');
+
     let $this = $(this);
     let $domForm = $this.closest('form');
     $.ajax({
@@ -249,14 +273,29 @@
       url: $(this).data('route'),
       method: "GET",
       dataType: 'json',
-      success: function(response) {           
-        $('select').val(response.news[0].category[0].id);
-        $('#image1').attr('src','upload/news/'+response.news[0].image);
-       // $('#content2').val(response.news[0].content);
+      success: function(response) {  
+      
+
+        $('#image1').attr('src', 'upload/news/' + response.news[0].image);
+        // $('#content2').val(response.news[0].content);
         $('#summary1').val(response.news[0].summary);
-        CKEDITOR.instances.content2.setData( response.news[0].content);
+        CKEDITOR.instances.content2.setData(response.news[0].content);
         $('#title1').val(response.news[0].title);
         $('#id1').val(response.news[0].id);
+        
+        var cats = response.news[0].category;
+        category  = response.category;
+        category.forEach(c => {
+          $('#cats option[value='+c.id+']').removeAttr('selected','selected');
+        });
+      
+        cats.forEach(element => {
+          $('#cats option[value=' + element.id + ']').attr('selected','selected');
+        });
+        // for(i=0; i< cats.length; i++){
+        //   cat_id = cats[i].id;
+        //   $('#cats option[value=' + cat_id + ']').attr('selected','selected');
+        // }
         $("#modalEdit").modal('show');
 
       }
@@ -274,14 +313,14 @@
     event.preventDefault();
     var data = new FormData(document.getElementById("form-edit"));
     data.append('content', CKEDITOR.instances['content2'].getData());
-  
+
     let $this = $(this);
     let $domForm = $this.closest('form');
     var id = $("#id1").val();
     var url = '{{ route("news.update", ":id") }}';
     url = url.replace(':id', id);
     $.ajax({
-      type: 'POST',
+        type: 'POST',
         url: url,
         data: data,
         cache: false,
@@ -343,8 +382,8 @@
 
   });
 
-  CKEDITOR.replace( 'content1' );        
-  CKEDITOR.replace( 'content2' );                      
+  CKEDITOR.replace('content1');
+  CKEDITOR.replace('content2');
 </script>
 
 @endsection

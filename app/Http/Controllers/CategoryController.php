@@ -119,7 +119,7 @@ class CategoryController extends Controller
     }
     public function newsofcategory($id)
     {
-        $category = $this->category->getCategoriesNews();
+         $category = $this->category->getCategoriesNews();
          $newsOfCategory = $this->category->newsOfCategory($id);
         return view('category.newsofcategory', compact('newsOfCategory', 'category'));
     }
