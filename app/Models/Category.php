@@ -16,6 +16,11 @@ class Category extends Model
     {
         return $this->belongsToMany(News::class);
     }
+
+    public function product()
+    {
+        return $this->belongsToMany(product::class);
+    }
  
     public function getCategoriesNews()
     {
