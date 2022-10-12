@@ -17,7 +17,7 @@ class MailController extends Controller
         ];
 
         try {
-            Mail::to('quangquangquang321@gmail.com')->send(new MailNotify($data));
+            Mail::to('minhbeo2kavc@gmail.com')->send(new MailNotify($data));
             return redirect()->route('homepage');
         } catch (Exception $th) {
             return  $th;

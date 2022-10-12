@@ -8,6 +8,7 @@ use App\Models\Shipping;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+
 class PlaceOrderController extends Controller
 {
     /**
@@ -58,20 +59,21 @@ class PlaceOrderController extends Controller
                 'status' => 'pending'
             ]);
 
+      
             foreach (Session::get('Cart')->products as $item) {
 
-                DB::table('order_details')->insert([
-                    'order_id' => $order_id,
-                    'product_id' => $item['productInfo']->id,
-                    'product_name' => $item['productInfo']->name,
-                    'product_price' => $item['productInfo']->price,
-                    'product_quantily' => $item['quanty'],
-                ]);
+                $dataNew['order_id'] = $order_id;
+                $dataNew['product_id'] = $item['productInfo']->id;
+                $dataNew['product_name'] = $item['productInfo']->name;
+                $dataNew['product_price'] =  $item['productInfo']->price;
+                $dataNew['product_quantily'] = $item['quanty'];             
+                $data[] = $dataNew;
             }
+            DB::table('order_details')->insert($data);
             $request->session()->forget('Cart');
             return redirect()->route('cart.list');
         } else {
-            return route('sigin-in.index');
+            return  redirect()->route('sigin-in.index');
         }
     }
 

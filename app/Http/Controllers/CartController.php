@@ -40,7 +40,7 @@ class CartController extends Controller
     {
         $product = Product::find($id);
         if ($product != null) {
-            $oldCart = Session('Cart') ? Session('Cart') : null;
+            $oldCart = Session('Cart') ?? null;
             $newCart = new Cart($oldCart);
             $newCart->addCart($product, $id);
             $request->session()->put('Cart', $newCart);
@@ -81,7 +81,7 @@ class CartController extends Controller
     {
          foreach($request->list as $item)
          {
-            $oldCart = Session('Cart') ? Session('Cart') : null;
+            $oldCart = Session('Cart') ?? null;
             $newCart = new Cart($oldCart);
             $newCart->updateCart($item['id'],$item['value']);
             $request->session()->put('Cart',$newCart);
@@ -101,7 +101,7 @@ class CartController extends Controller
      */
     public function destroyItem(Request $request,$id)
     {
-        $oldCart = Session('Cart') ? Session('Cart') : null;
+        $oldCart = Session('Cart') ?? null;
         $newCart = new Cart($oldCart);
         $newCart->deleteCart($id);
         if(Count($newCart->products)>0){
@@ -114,7 +114,7 @@ class CartController extends Controller
 
     public function  destroyList(Request $request,$id)
     {
-        $oldCart = Session('Cart') ? Session('Cart') : null;
+        $oldCart = Session('Cart') ?? null;
         $newCart = new Cart($oldCart);
         $newCart->deleteCart($id);
         if(Count($newCart->products)>0){
