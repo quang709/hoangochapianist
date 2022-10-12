@@ -24,7 +24,7 @@ class StoreCustomerRequest extends FormRequest
     {
         return [
             'name' => 'required|max:255|',
-            'email' => 'required|max:255|email|unique,customers,email',
+            'email' => 'required|max:255|email|unique:customers,email',
             'password' => 'required|max:255|',
             'repassword' => 'required|same:password|max:255',
             'phone' => 'required|regex:/(0)[0-9]/|not_regex:/[a-z]/|max:10',

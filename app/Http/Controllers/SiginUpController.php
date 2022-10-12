@@ -41,7 +41,7 @@ class SiginUpController extends Controller
         $customer = new Customer();
         $customer->name = $request->name;
         $customer->email = $request->email;
-        $customer->password = md5($request->password);
+        $customer->password = encrypt($request->password);
         $customer->phone = $request->phone;
         $customer->save();
         Session::put('customer',$customer);
