@@ -26,7 +26,7 @@ class CategoryController extends Controller
     public function index()
     {
         $category =   $this->category->getCategoriesNews();
-        return view('category.index', compact('category'));
+        return view('admin.category.index', compact('category'));
     }
 
     /**
@@ -121,6 +121,6 @@ class CategoryController extends Controller
     {
          $category = $this->category->getCategoriesNews();
          $newsOfCategory = $this->category->newsOfCategory($id);
-        return view('category.newsofcategory', compact('newsOfCategory', 'category'));
+        return view('admin.category.newsofcategory', compact('newsOfCategory', 'category'));
     }
 }

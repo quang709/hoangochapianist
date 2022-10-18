@@ -38,7 +38,7 @@ class NewsController extends Controller
 
         $category = $this->category->getCategoriesNews();
         $news = News::latest()->get();
-        return view('news.index', compact('news', 'category'));
+        return view('admin.news.index', compact('news', 'category'));
     }
 
     /**
