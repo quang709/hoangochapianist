@@ -48,7 +48,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.4.1/swiper-bundle.min.css" />
 
 
-    <link href="{{ asset('/css/style.css') }}" type="text/css" rel="stylesheet">
+    <link href="{{ url('css/style.css') }}" type="text/css" rel="stylesheet">
 
     <link href="{{ asset('/css/font-awesome1.css') }}" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
@@ -107,7 +107,7 @@
                 <i class="fas fa-bars"></i>
             </button>
             <div class="d-lg-none d-block text-center w-100">
-                <a class="navbar-brand" href="http://hoangochapianist.com.local:8080/homepage"><img data-loading="lazy" src="https://www.hoangochapianist.com/media/wpebuokr/logo-big-white.svg?format=webp&width=134" alt="Hoa Ngoc Ha Pianist" /></a>
+                <a class="navbar-brand" href="http://hoangochapianist.me/homepage"><img data-loading="lazy" src="https://www.hoangochapianist.com/media/wpebuokr/logo-big-white.svg?format=webp&width=134" alt="Hoa Ngoc Ha Pianist" /></a>
             </div>
             <div class="d-lg-none d-block language language-mobile">
                 <div class="nav-item dropdown">
@@ -123,7 +123,7 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="http://hoangochapianist.com.local:8080/homepage">Home</a>
+                        <a class="nav-link"  href="http://hoangochapianist.me/homepage">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/#story">Story</a>
@@ -478,8 +478,6 @@
     </script>
     <!--===============================================================================================-->
     <script src="assets1/js/main.js"></script>
-
-
     <!-- JavaScript -->
     <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 </body>
