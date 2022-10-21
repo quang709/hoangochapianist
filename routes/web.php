@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\API\PayPalController;
+use App\Http\Controllers\ForgetSessionController;
 use App\Http\Controllers\MailController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GoogleSocialiteController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -77,3 +81,8 @@ Route::post('sigin-up', [App\Http\Controllers\SiginUpController::class, 'store']
 Route::post('place-order', [App\Http\Controllers\PlaceOrderController::class, 'store'])->name('place-order.store');
 
 Route::get('send-mail',[MailController::class,'index']);
+
+Route::get('auth/google', [GoogleSocialiteController::class, 'redirectToGoogle'])->name('google.store');
+Route::get('callback/google', [GoogleSocialiteController::class, 'handleCallback']);
+
+Route::get('session-products',[ForgetSessionController::class,'index'])->name('session');
