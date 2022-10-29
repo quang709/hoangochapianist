@@ -43,9 +43,7 @@ class PlaceOrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
-        $coupon =  Coupon::where('id',Session::get('coupon')->id)->first();     
-        $coupon->quantity = $coupon->quantity - 1 ;
-        $coupon->save();
+     
         if (isset(Session::get('customer')->id)) {
 
             $shipping = new Shipping();
@@ -101,6 +99,10 @@ class PlaceOrderController extends Controller
                 'customer_id'=>Session::get('customer')->id,
             ]);
             
+            $coupon =  Coupon::where('id',Session::get('coupon')->id)->first();     
+            $coupon->quantity = $coupon->quantity - 1 ;
+            $coupon->save();
+
             $request->session()->forget(['Cart','coupon']);
            } else {
             $request->session()->forget(['Cart']);
