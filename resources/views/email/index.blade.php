@@ -8,6 +8,7 @@
 </head>
 <body>
 <h3>Order hoangochapianist.com</h3>
-<p>{{$data['body']}}</p>
+
+<p>{{ $body }}</p>
 </body>
 </html>

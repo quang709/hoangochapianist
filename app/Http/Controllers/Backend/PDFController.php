@@ -1,24 +1,34 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Backend;
 
-use App\Models\Customer;
+use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
-class OrdersController extends Controller
+use PDF;
+class PDFController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    { 
-      
-        $orders = Order::with('customer')->get(); 
-        return view('admin.orders.index',compact('orders'));
+    public function index($id)
+    {
+        $orders = Order::with('customer')->with('shipping')->where('id',$id)->get();
+        $product = DB::table('order_details')->where('order_id',$id)->get();
+        $data = [
+            'title' => 'Welcome to hoangngocha.com',
+            'date' => date('m/d/Y'),
+           'orders'=> $orders ,
+           'product'=> $product
+        ];
+           
+   
+     $pdf = PDF::loadView('PDF/index', $data);
+     
+        return $pdf->download('order.pdf');
     }
 
     /**
@@ -50,10 +60,7 @@ class OrdersController extends Controller
      */
     public function show($id)
     {
-          $orders = Order::with('customer')->with('shipping')->where('id',$id)->get();
-          $product = DB::table('order_details')->where('order_id',$id)->get();
-         
-        return view('admin.orders.show',compact(['orders','product']));
+        //
     }
 
     /**

@@ -1,14 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Fontend;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
+use App\Models\Coupon;
+use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Shipping;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
-
+use PDF;
+use Mail;
 class PlaceOrderController extends Controller
 {
     /**
@@ -39,7 +43,7 @@ class PlaceOrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
-
+     
         if (isset(Session::get('customer')->id)) {
 
             $shipping = new Shipping();
@@ -51,14 +55,25 @@ class PlaceOrderController extends Controller
             $shipping->save();
 
             $payment = Payment::where('name', $request->payment)->first();
-            $order_id = DB::table('orders')->insertGetId([
-                'customer_id' => Session::get('customer')->id,
-                'shipping_id' => $shipping->id,
-                'payment_id' => $payment->id,
-                'total' => Session::get('Cart')->totalPrice,
-                'status' => 'pending'
-            ]);
-
+            if(Session::get('coupon')->condition == 0) {
+                $order_id = DB::table('orders')->insertGetId([
+                    'customer_id' => Session::get('customer')->id,
+                    'shipping_id' => $shipping->id,
+                    'payment_id' => $payment->id,
+                    'total' =>   Session::get('Cart')->totalPrice - (Session::get('Cart')->totalPrice*Session::get('coupon')->number/100) ,
+                    'status' => 'pending'
+                ]);
+    
+            }elseif(Session::get('coupon')->condition == 1) {
+                $order_id = DB::table('orders')->insertGetId([
+                    'customer_id' => Session::get('customer')->id,
+                    'shipping_id' => $shipping->id,
+                    'payment_id' => $payment->id,
+                    'total' =>   Session::get('Cart')->totalPrice - Session::get('coupon')->number ,
+                    'status' => 'pending'
+                ]);
+            }
+      
       
             foreach (Session::get('Cart')->products as $item) {
 
@@ -70,7 +85,42 @@ class PlaceOrderController extends Controller
                 $data[] = $dataNew;
             }
             DB::table('order_details')->insert($data);
-            $request->session()->forget('Cart');
+
+            $orders = Order::with('customer')->with('shipping')->where('id',$order_id)->get();
+            $product = DB::table('order_details')->where('order_id',$order_id)->get();
+
+            $dataMail["email"] = $shipping->email;
+            $dataMail["title"] = "Welcome to hoangngocha.com";
+            $dataMail["date"] = date('m/d/Y');
+            $dataMail["orders"] =  $orders;
+            $dataMail["product"] = $product;        
+            $dataMail["body"] ="Thanks for orders";
+        
+            $pdf = PDF::loadView('PDF/index', $dataMail);
+         
+            Mail::send('email.index', $dataMail, function($message)use($dataMail, $pdf) {
+                $message->to($dataMail["email"], $dataMail["email"])
+                        ->subject($dataMail["title"])
+                        ->attachData($pdf->output(), "Order.pdf");
+            });
+
+           if (Session::get('coupon')){
+            DB::table('coupon_customer')->insert([
+                'coupon_id' => Session::get('coupon')->id,
+                'customer_id'=>Session::get('customer')->id,
+            ]);
+
+            $coupon =  Coupon::where('id',Session::get('coupon')->id)->first();     
+            $coupon->quantity = $coupon->quantity - 1 ;
+            $coupon->save();
+
+            $request->session()->forget(['Cart','coupon']);
+           } else {
+            $request->session()->forget(['Cart']);
+           }
+           
+
+          
             return redirect()->route('cart.list');
         } else {
             return  redirect()->route('sigin-in.index');

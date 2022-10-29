@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Backend;
 
+use App\Http\Controllers\Controller;
+use App\Models\Customer;
+use App\Models\Order;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
-class ForgetSessionController extends Controller
+class OrdersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,14 +16,10 @@ class ForgetSessionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        if( Session::has('Cart')){
-            Session::forget('Cart');
-        }
-        return Response()->json([
-            'sublistcart' => view('pages.listcart.sublistcart')->render(),
-            'cart' => view('pages.cart.index')->render()
-        ]);
+    { 
+      
+        $orders = Order::with('customer')->get(); 
+        return view('admin.orders.index',compact('orders'));
     }
 
     /**
@@ -52,7 +51,10 @@ class ForgetSessionController extends Controller
      */
     public function show($id)
     {
-        //
+          $orders = Order::with('customer')->with('shipping')->where('id',$id)->get();
+          $product = DB::table('order_details')->where('order_id',$id)->get();
+         
+        return view('admin.orders.show',compact(['orders','product']));
     }
 
     /**

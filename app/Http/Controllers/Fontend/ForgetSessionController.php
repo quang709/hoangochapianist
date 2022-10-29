@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Fontend;
 
-use App\Models\Customer;
-use App\Models\Product;
-use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
-class SiginInController extends Controller
+class ForgetSessionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +15,13 @@ class SiginInController extends Controller
      */
     public function index()
     {
-        return view('pages.sigin-in.index'); 
+        if( Session::has('Cart')){
+            Session::forget('Cart');
+        }
+        return Response()->json([
+            'sublistcart' => view('pages.listcart.sublistcart')->render(),
+            'cart' => view('pages.cart.index')->render()
+        ]);
     }
 
     /**
@@ -37,15 +42,7 @@ class SiginInController extends Controller
      */
     public function store(Request $request)
     {
-        $customer = Customer::where('email', $request->email)
-            ->where('password', md5($request->password))->first();
-        
-        if (($customer)) {
-            Session::put('customer', $customer);
-            return  redirect()->route('homepage');
-        } else {
-            return route('sigin-in.index');
-        }
+        //
     }
 
     /**

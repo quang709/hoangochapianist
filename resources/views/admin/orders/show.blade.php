@@ -3,6 +3,7 @@
 <div class="container-fluid">
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
+   <a  href="{{route('pdf.index',['id'=>$orders[0]->id])}}">  <button type="button" class="btn btn-primary">PDF</button> </a>
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Customer information</h6>
         </div>
@@ -86,6 +87,7 @@
                         </tr>
                         @endforeach
                         <p name=""> Total = {{number_format($orders[0]->total)}}đ</p>
+                   
                     </tbody>
                 </table>
             </div>

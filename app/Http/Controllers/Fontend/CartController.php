@@ -1,15 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Fontend;
 
+use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Cart;
+use App\Models\Coupon;
 
 use Session;
 use Response;
 class CartController extends Controller
 {
+    protected $coupon;
+    public function __construct(Coupon $coupon)
+    {
+        $this->coupon = $coupon;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -125,6 +132,27 @@ class CartController extends Controller
         return Response()->json([
             'sublistcart' => view('pages.listcart.sublistcart')->render(),
             'cart' => view('pages.cart.index')->render()
+        ]);
+    }
+    public function applyCoupon(Request  $request )
+    {
+    
+        $code = $request->code;
+       $coupon = $this->coupon->firstWithExperyDate($code ,$request->session()->get('customer')->id);
+      
+        if($coupon)
+        {
+           $message = 'Apply success';   
+           $request->session()->put('coupon',$coupon);
+         
+        }else{
+            $request->session()->forget('coupon');
+      
+            $message = 'Apply not success or exists';
+        }
+        return Response()->json([ 
+        'sublistcart' => view('pages.listcart.sublistcart')->render(),
+         'message' =>  $message 
         ]);
     }
 
