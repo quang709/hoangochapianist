@@ -195,8 +195,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
-
-       
+        Cartalyst\Stripe\Laravel\StripeServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*
@@ -214,6 +214,8 @@ return [
         'PayPal' => Srmklive\PayPal\Facades\PayPal::class,
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'Stripe' => Cartalyst\Stripe\Laravel\Facades\Stripe::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ])->toArray(),
 
 ];

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Backend;
 
 use App\Http\Requests\StoreNewsRequest;
 use App\Http\Requests\UpdateNewsRequest;
@@ -9,6 +9,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Traits\HandleImage;
+use Illuminate\Routing\Controller;
 
 class NewsController extends Controller
 {
