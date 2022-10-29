@@ -55,14 +55,25 @@ class PlaceOrderController extends Controller
             $shipping->save();
 
             $payment = Payment::where('name', $request->payment)->first();
-            $order_id = DB::table('orders')->insertGetId([
-                'customer_id' => Session::get('customer')->id,
-                'shipping_id' => $shipping->id,
-                'payment_id' => $payment->id,
-                'total' => Session::get('Cart')->totalPrice,
-                'status' => 'pending'
-            ]);
-
+            if(Session::get('coupon')->condition == 0) {
+                $order_id = DB::table('orders')->insertGetId([
+                    'customer_id' => Session::get('customer')->id,
+                    'shipping_id' => $shipping->id,
+                    'payment_id' => $payment->id,
+                    'total' =>   Session::get('Cart')->totalPrice - (Session::get('Cart')->totalPrice*Session::get('coupon')->number/100) ,
+                    'status' => 'pending'
+                ]);
+    
+            }elseif(Session::get('coupon')->condition == 1) {
+                $order_id = DB::table('orders')->insertGetId([
+                    'customer_id' => Session::get('customer')->id,
+                    'shipping_id' => $shipping->id,
+                    'payment_id' => $payment->id,
+                    'total' =>   Session::get('Cart')->totalPrice - Session::get('coupon')->number ,
+                    'status' => 'pending'
+                ]);
+            }
+      
       
             foreach (Session::get('Cart')->products as $item) {
 
@@ -98,7 +109,7 @@ class PlaceOrderController extends Controller
                 'coupon_id' => Session::get('coupon')->id,
                 'customer_id'=>Session::get('customer')->id,
             ]);
-            
+
             $coupon =  Coupon::where('id',Session::get('coupon')->id)->first();     
             $coupon->quantity = $coupon->quantity - 1 ;
             $coupon->save();

@@ -185,9 +185,9 @@
 							<span class="mtext-110 cl2"   @if(Session::get('coupon')) style=" text-decoration: line-through " @endif>
 								{{number_format(Session::get("Cart")->totalPrice,'0','','.')}}đ							
 							</span>
-							  @if(Session::has('coupon')!=null && Session::has('coupon')==0)
+							  @if(Session::has('coupon')!=null && Session::get('coupon')->condition==0)
 							    {{ number_format(Session::get("Cart")->totalPrice - ( Session::get("Cart")->totalPrice * Session::get('coupon')->number/100)) }}đ
-							 @elseif(Session::has('coupon')!=null && Session::has('coupon')==1)
+							 @elseif(Session::has('coupon')!=null && Session::get('coupon')->condition==1)
 							 {{ number_format(Session::get("Cart")->totalPrice -  Session::get('coupon')->number) }}đ
 								@endif
 							@endif
